@@ -1,0 +1,31 @@
+---
+swagger: '2.0'
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/posts":
+    get:
+      summary: get list post
+      tags:
+      - Posts
+      consumes:
+      - application/json
+      responses:
+        '200':
+          description: blog found
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/post"
+definitions:
+  post:
+    type: object
+    properties:
+      type:
+        type: string
+      description:
+        type: string
+    required:
+    - title
+    - description

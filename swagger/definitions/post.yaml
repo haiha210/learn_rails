@@ -1,0 +1,10 @@
+post:
+  type: object
+  properties:
+    type:
+      type: string
+    description:
+      type: string
+  required:
+    - title
+    - description
