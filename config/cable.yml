@@ -1,5 +1,7 @@
 development:
-  adapter: async
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL_CABLE") %>
+  channel_prefix: demo_swagger_docs_production
 
 test:
   adapter: test
