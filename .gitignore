@@ -30,3 +30,5 @@
 
 # Ignore dotenv file
 .env
+
+node_modules/

@@ -1,16 +1,14 @@
-class MessagesController < ApplicationController
+class Api::V1::MessagesController < ApplicationController
   def index
     messages = Message.all
-    render json: message
+    render json: messages
   end
+
   def create
     message = Message.new(message_params)
-    if message.save
-      ActionCable.server.broadcast 'messages_channel', message
-      head :ok
-    else
-      head :ok
-    end
+    message.save!
+    ActionCable.server.broadcast 'messages_channel', message.as_json
+    head :ok
   end
 
   private

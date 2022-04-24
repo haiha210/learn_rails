@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import ActionCable, { createConsumer } from "@rails/actioncable"
+import { ActionCableProvider } from 'react-actioncable-provider';
+
+import { createConsumer } from "@rails/actioncable"
 
 class App extends Component {
   constructor() {
@@ -22,9 +24,14 @@ class App extends Component {
   }
 
   createSubscription = () => {
-    this.cable.subscriptions.create(
+    this.subscriptions = this.cable.subscriptions.create(
       { channel: 'MessagesChannel' },
-      { received: message => this.handleReceivedMessages(message) }
+      {
+        connected: () => {
+          console.log("client connected");
+        },
+        received: message => this.handleReceivedMessages(message),
+      }
     )
   }
 
@@ -37,35 +44,22 @@ class App extends Component {
     this.setState({ messages: [...this.state.messages, message] })
   }
 
-  handleMessageSubmit = e => {
+  handleSubmitMessage = e => {
     e.preventDefault();
-    const messageObj = {
-      message: {
-        content: e.target.message.value
-      }
-    }
-    const fetchObj = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(messageObj)
-    }
-    fetch('http://localhost:3000/messages', fetchObj)
+    this.subscriptions.send(
+      {content: e.target.message.value}
+    )
     e.target.reset()
   }
 
   render() {
     return (
       <div className='App'>
-        {/* <ActionCable
-          channel={{ channel: 'MessagesChannel' }}
-          onReceived={this.handleReceivedMessages}
-        /> */}
+        <ActionCableProvider cable={this.cable}/>
         <h2>Messages</h2>
-        {/* <ul>{this.mapMessages()}</ul> */}
-        <form>
-          <input name='message' type='text' />
+        <ul>{this.mapMessages()}</ul>
+        <form onSubmit={this.handleSubmitMessage}>
+          <input name='message' type='text' value={this.state.value} />
           <input type='submit' value='Send message' />
         </form>
       </div>
