@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 require 'swagger_helper'
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe 'api/v1/posts_controller', type: :request do
   after do |example|
@@ -10,14 +12,14 @@ RSpec.describe 'api/v1/posts_controller', type: :request do
     }
   end
 
-  path "/api/v1/posts" do
-    get "get list post" do
-      tags "Posts"
-      consumes "application/json"
+  path '/api/v1/posts' do
+    get 'get list post' do
+      tags 'Posts'
+      consumes 'application/json'
 
       response 200, 'blog found' do
-        schema type: :array, items: {"$ref": "#/definitions/post"}
-        consumes "application/json"
+        schema type: :array, items: { "$ref": '#/definitions/post' }
+        consumes 'application/json'
 
         before do |example|
           create_list :post, 10
