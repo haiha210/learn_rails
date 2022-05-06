@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::PostsController < ApplicationController
   def index
     posts = Post.limit(10)
