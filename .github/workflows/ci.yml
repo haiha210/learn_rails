@@ -21,7 +21,7 @@ jobs:
       RAILS_ENV: test
       DATABASE_USERNAME: rails
       DATABASE_PASSWORD: password
-      DATABASE_HOST: mysql
+      DATABASE_HOST: 127.0.0.1
       REDIS_URL_CABLE: redis://@redis:6379/2
     steps:
       - name: Checkout code
