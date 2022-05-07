@@ -1,0 +1,35 @@
+require:
+  - rubocop-rails
+  - rubocop-performance
+
+# This is rubocop configuration file for Framgia's coding style. Enabling and disabling is configured
+# in separate files. This file adds all other parameters apart from Enabled.
+
+# Put the following files into the same directory as this file.
+inherit_from:
+  - .rubocop_enabled.yml
+  - .rubocop_disabled.yml
+
+# Common configuration.
+AllCops:
+  # Disable cop pending
+  NewCops: disable
+  # Ignore message suggest extensions
+  SuggestExtensions:
+    rubocop-rspec: false
+  # Include gemspec and Rakefile
+  Include:
+    - "**/*.rb"
+    - "**/*.gemspec"
+    - "**/Rakefile"
+    - "**/config.ru"
+    - "config/initializers/*"
+  Exclude:
+    - "vendor/**/*"
+    - "bin/*"
+    - "db/*"
+    - "spec/*"
+    - "config/*"
+    - "config/environments/*"
+    - "config/routes/*"
+    - "node_modules/**/*"
