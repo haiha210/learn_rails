@@ -21,6 +21,10 @@ group :development, :test do
 end
 
 group :test do
+  gem "rubocop"
+  gem "rubocop-checkstyle_formatter"
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
   gem 'brakeman'
   gem 'bundle-audit'
   gem 'rspec'
