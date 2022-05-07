@@ -1,0 +1,64 @@
+name: "Demo CI"
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main, develop ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - "3306:3306"
+        env:
+          MYSQL_DATABASE: demo_swagger_docs_test
+          MYSQL_USER: rails
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: root_password
+    env:
+      RAILS_ENV: test
+      DATABASE_USERNAME: rails
+      DATABASE_PASSWORD: password
+      DATABASE_HOST: 127.0.0.1
+      REDIS_URL_CABLE: redis://@redis:6379/2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1.105.0
+        with:
+          ruby-version: 3.1.2
+          bundler-cache: true
+      - name: Create and migrate database
+        run: |
+          sudo apt-get -yqq install libmysqlclient-dev
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+      - name: Run rspec
+        run: bundle exec rspec spec/
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1.105.0
+        with:
+          bundler-cache: true
+          ruby-version: 3.1.2
+      - name: bundle gem file
+        run: |
+          sudo apt-get -yqq install libmysqlclient-dev
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+      - name: Security audit dependencies
+        run: bundle exec bundler-audit --update
+      - name: Security audit application code
+        run: bundle exec brakeman -q -w2
+      - name: Lint Ruby files
+        run: bundle exec rubocop --parallel app/ lib/ db/migrate/ config/

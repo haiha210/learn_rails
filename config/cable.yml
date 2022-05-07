@@ -1,12 +1,14 @@
-development:
+default: &default
   adapter: redis
   url: <%= ENV.fetch("REDIS_URL_CABLE") %>
-  channel_prefix: demo_swagger_docs_production
+
+development:
+  <<: *default
+  channel_prefix: demo_swagger_docs_development
 
 test:
   adapter: test
 
 production:
-  adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  <<: *default
   channel_prefix: demo_swagger_docs_production
